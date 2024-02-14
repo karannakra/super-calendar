@@ -1,0 +1,44 @@
+{"version":"1.0.0",
+"name": "super-calendar",
+"author": "karan nakra <karannakra1@gmail.com>",
+"description": "A powerful and versatile JavaScript library for converting human-friendly date inputs into date objects. Super Calendar provides date parsing, natural language date recognition, and international date support, making it easy to work with dates in a user-friendly way. It includes features such as holiday date recognition, custom date input handling, and smart date conversion. Simplify date manipulation and formatting with Super Calendar, your go-to solution for handling dates with ease.",
+"engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "lib/",
+    "package.json",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karannakra/super-calendar"
+  },
+  "bugs": {
+    "url": "https://github.com/karannakra/super-calendar/issues"
+  },
+  "keywords": [
+    "date parsing",
+    "natural language date",
+    "date conversion",
+    "user-friendly date",
+    "date utility",
+    "date manipulation",
+    "date recognition",
+    "holiday dates",
+    "date formatter",
+    "international date support",
+    "human-readable date",
+    "date string parser",
+    "time-sensitive input",
+    "date resolver",
+    "date representation",
+    "date formatting",
+    "date interpreter",
+    "custom date input",
+    "smart date conversion",
+    "date processing"
+  ]
+}
