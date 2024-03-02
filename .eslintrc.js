@@ -5,7 +5,7 @@ module.exports = {
         "es2021": true,
         "node": true
     },
-    extends: ["eslint:recommended", "plugin:n/recommended"],
+    extends: ["eslint:recommended", "plugin:n/recommended","prettier"],
     "overrides": [
         {
             "files": [
