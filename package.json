@@ -4,9 +4,10 @@
   "description": "A powerful and versatile JavaScript library for converting human-friendly date inputs into date objects. Super Calendar provides date parsing, natural language date recognition, and international date support, making it easy to work with dates in a user-friendly way. It includes features such as holiday date recognition, custom date input handling, and smart date conversion. Simplify date manipulation and formatting with Super Calendar, your go-to solution for handling dates with ease.",
   "main": "index.js",
   "scripts": {
-    "lint:tsc":"npx tsc --noEmit",
+    "lint:tsc": "npx tsc --noEmit",
     "lint:eslint": "npx eslint src/*.ts --ext .ts",
-    "lint:full":"pnpm run lint:tsc && pnpm run lint:eslint"
+    "lint:full": "pnpm run lint:tsc && pnpm run lint:eslint",
+    "fmt": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern --cache ."
   },
   "files": [
     "package.json",
@@ -24,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/karannakra/super-calendar/issues"
   },
-  "packageManager":"pnpm@8.11.0",
+  "packageManager": "pnpm@8.11.0",
   "keywords": [
     "date parsing",
     "natural language date",
@@ -50,10 +51,12 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
+    "prettier": "3.2.5",
     "typescript": "*"
   }
 }

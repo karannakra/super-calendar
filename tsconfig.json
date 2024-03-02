@@ -1,5 +1,10 @@
 {
-  "compilerOptions": { "moduleResolution": "Bundler","module":"ESNext", "noImplicitAny": true, "sourceMap": true },
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "noImplicitAny": true,
+    "sourceMap": true
+  },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

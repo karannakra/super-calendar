@@ -1,0 +1,11 @@
+#Ignore artifacts:
+build
+coverage
+
+
+#Editor 
+.vscode
+
+
+#pnpm-lock
+pnpm-lock.yaml
