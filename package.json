@@ -60,5 +60,9 @@
     "eslint-plugin-promise": "^6.0.0",
     "prettier": "3.2.5",
     "typescript": "*"
+  },
+  "dependencies": {
+    "chrono-node": "2.7.5",
+    "dayjs": "^1.11.10"
   }
 }
