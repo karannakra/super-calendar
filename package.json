@@ -62,6 +62,7 @@
     "typescript": "*"
   },
   "dependencies": {
+    "chrono-node": "2.7.5",
     "dayjs": "^1.11.10"
   }
 }
