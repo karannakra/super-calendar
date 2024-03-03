@@ -4,9 +4,11 @@
   "description": "A powerful and versatile JavaScript library for converting human-friendly date inputs into date objects. Super Calendar provides date parsing, natural language date recognition, and international date support, making it easy to work with dates in a user-friendly way. It includes features such as holiday date recognition, custom date input handling, and smart date conversion. Simplify date manipulation and formatting with Super Calendar, your go-to solution for handling dates with ease.",
   "main": "index.js",
   "scripts": {
+    "build": "rm -rf dist && pnpm run lint:full",
     "lint:tsc": "npx tsc --noEmit",
     "lint:eslint": "npx eslint src/*.ts --ext .ts",
     "lint:full": "pnpm run lint:tsc && pnpm run lint:eslint",
+    "fmt:check": "prettier --check .",
     "fmt": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern --cache ."
   },
   "files": [
