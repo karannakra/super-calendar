@@ -1,4 +1,4 @@
-<p style="display: flex; justify-content: center;"><img src="assets/logo.jpg"></p>
+<p align="center"><img src="assets/logo.jpg"></p>
 
 # Super-calendar
 
@@ -32,3 +32,7 @@ Contributions are welcome! If you have suggestions for improvements, new feature
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Project Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/a0a657ae2989fe461f290002fb7cf2c205d1bd3b.svg "Repobeats analytics image")
