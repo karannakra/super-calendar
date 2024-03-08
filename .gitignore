@@ -15,3 +15,6 @@ local.env
 
 # macOS-specific files
 .DS_Store
+
+# build
+dist
