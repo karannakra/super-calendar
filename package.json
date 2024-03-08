@@ -2,9 +2,8 @@
   "name": "super-calendar",
   "version": "1.0.0",
   "description": "A powerful and versatile JavaScript library for converting human-friendly date inputs into date objects. Super Calendar provides date parsing, natural language date recognition, and international date support, making it easy to work with dates in a user-friendly way. It includes features such as holiday date recognition, custom date input handling, and smart date conversion. Simplify date manipulation and formatting with Super Calendar, your go-to solution for handling dates with ease.",
-  "main": "index.js",
   "scripts": {
-    "build": "rm -rf dist && pnpm run lint:full",
+    "build": "rm -rf dist && pnpm run lint:full && tsup",
     "lint:tsc": "npx tsc --noEmit",
     "lint:eslint": "npx eslint src/*.ts --ext .ts",
     "lint:full": "pnpm run lint:tsc && pnpm run lint:eslint",
@@ -16,6 +15,17 @@
     "LICENSE.md",
     "README.md"
   ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/esm/index.js"
+    },
+    "require": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
