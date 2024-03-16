@@ -14,7 +14,7 @@ export const dayJsUnits: chrono.Component[] = [
 
 // define your lookup helper functions here, using only the first two letters
 
-export const lookupHelpers: StringMap<number> = {
+export const stringToInt: StringMap<number> = {
   a: 1,
   an: 1,
   on: 1,
@@ -59,6 +59,7 @@ export const weekdays = [
   "saturday",
   "sunday",
 ];
-export const nextUnits = ["week", "month", "quarter", "year"];
-export const inUnits = ["minutes", "hours", "days", "weeks", "months", "years"];
+
+export const nextUnits = ["week", "month", "quarter", "year"] as const;
+export const inUnits = ["minutes", "hours", "days", "weeks", "months", "years"] as const;
 export const shortcutRegex = /(\d)([a-zA-Z])/g;

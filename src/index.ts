@@ -1,7 +1,15 @@
 import * as chrono from "chrono-node";
 import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport";
-import { fixedDate, shortcutRegex, stringToMonth, weekdays } from "./constants";
+import {
+  fixedDate,
+  inUnits,
+  nextUnits,
+  shortcutRegex,
+  stringToInt,
+  stringToMonth,
+  weekdays,
+} from "./constants";
 
 dayjs.extend(objectSupport);
 
@@ -81,12 +89,67 @@ export function parseDate({
   if (query && !!query.trim().length) {
     // if no shortcut, use default
     suggestions = fixedDate.filter(v => v.includes(query.split(" ")[0]));
+
     // if using 'this'-shortcut, and no other shortcuts are in play
     if (isThis && !isNext && !isIn && !isOn && !isNumber) {
       stage = weekdays;
       if (what) stage = stage.filter(v => v.includes(what));
       suggestions = suggestions.concat(stage.map(string => "this " + string));
     }
+    // if using 'next'-shortcut, and no other shortcuts are in play
+    else if (isNext && !isIn && !isOn && !isThis && !isNumber) {
+      stage = weekdays.concat(nextUnits);
+      if (what) stage = stage.filter(v => v.includes(what));
+      suggestions = suggestions.concat(stage.map(string => "next " + string));
+    }
+    // if no shortcut in play, try weekdays
+    else if (!isNext && !isIn && !isThis && !isNumber) {
+      stage = weekdays;
+      if (what) stage = stage.filter(v => v.includes(what));
+      const strictFilter =
+        (query.split(" ").filter(v => !!v.length).length <= 1 && !isOn) ||
+        (query.split(" ").filter(v => !!v.length).length > 1 && isOn) ||
+        !!results.length;
+      stage = isOn
+        ? stage
+        : strictFilter
+          ? stage.filter(
+              string => string === query || string.includes(query.split(" ")[0])
+            )
+          : stage.filter(
+              string =>
+                string === query ||
+                !!query.split(" ").filter(subQuery => string.includes(subQuery))
+                  .length
+            );
+      suggestions = suggestions.concat(stage.map(string => "on " + string));
+    }
+
+     // if using 'in'-shortcut, or first string is number */
+     else if (!isNext && !isThis && !isOn) {
+        // checks both numbers and frequently used strings that mean numbers
+        const number =
+            Number(query.split(" ")[0]) ||
+            Number(stringToInt[query.split(" ")[0].substring(0, 2)]) ||
+            (isIn && (Number(what) || (what && Number(stringToInt[what.substring(0, 2)]))));
+        stage = inUnits;
+        // this is a bit hacky, but it basically just replace the 'what' based on wether query starts with 'in ...'
+        what = isIn ? query.split(" ")[2] : what;
+        if (what) stage = stage.filter(v => v.includes(what));
+        // if there is a valid number, we will use that
+        if (!isOn) {
+            suggestions = suggestions.concat(
+                stage.map(string => {
+                    const showText = number === 1 || !number;
+                    const val = showText ? (string === "hours" ? "an" : "a") : number;
+                    const unit = showText ? string.substring(0, string.length - 1) : string;
+                    return "in " + val + " " + unit;
+                })
+            );
+        }
+    }
   }
   return [suggestions, selectedLocale]; // hack to prevent eslint from complaining
 }
+
+parseDate({query:"next"})
