@@ -14,7 +14,7 @@ export const dayJsUnits: chrono.Component[] = [
 
 // define your lookup helper functions here, using only the first two letters
 
-export const lookupHelpers: StringMap<number> = {
+export const stringToInt: StringMap<number> = {
   a: 1,
   an: 1,
   on: 1,
