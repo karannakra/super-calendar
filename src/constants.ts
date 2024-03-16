@@ -59,6 +59,7 @@ export const weekdays = [
   "saturday",
   "sunday",
 ];
-export const nextUnits = ["week", "month", "quarter", "year"];
-export const inUnits = ["minutes", "hours", "days", "weeks", "months", "years"];
+
+export const nextUnits = ["week", "month", "quarter", "year"] as const;
+export const inUnits = ["minutes", "hours", "days", "weeks", "months", "years"] as const;
 export const shortcutRegex = /(\d)([a-zA-Z])/g;
