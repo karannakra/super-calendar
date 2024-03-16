@@ -125,31 +125,35 @@ export function parseDate({
       suggestions = suggestions.concat(stage.map(string => "on " + string));
     }
 
-     // if using 'in'-shortcut, or first string is number */
-     else if (!isNext && !isThis && !isOn) {
-        // checks both numbers and frequently used strings that mean numbers
-        const number =
-            Number(query.split(" ")[0]) ||
-            Number(stringToInt[query.split(" ")[0].substring(0, 2)]) ||
-            (isIn && (Number(what) || (what && Number(stringToInt[what.substring(0, 2)]))));
-        stage = inUnits;
-        // this is a bit hacky, but it basically just replace the 'what' based on wether query starts with 'in ...'
-        what = isIn ? query.split(" ")[2] : what;
-        if (what) stage = stage.filter(v => v.includes(what));
-        // if there is a valid number, we will use that
-        if (!isOn) {
-            suggestions = suggestions.concat(
-                stage.map(string => {
-                    const showText = number === 1 || !number;
-                    const val = showText ? (string === "hours" ? "an" : "a") : number;
-                    const unit = showText ? string.substring(0, string.length - 1) : string;
-                    return "in " + val + " " + unit;
-                })
-            );
-        }
+    // if using 'in'-shortcut, or first string is number */
+    else if (!isNext && !isThis && !isOn) {
+      // checks both numbers and frequently used strings that mean numbers
+      const number =
+        Number(query.split(" ")[0]) ||
+        Number(stringToInt[query.split(" ")[0].substring(0, 2)]) ||
+        (isIn &&
+          (Number(what) ||
+            (what && Number(stringToInt[what.substring(0, 2)]))));
+      stage = inUnits;
+      // this is a bit hacky, but it basically just replace the 'what' based on wether query starts with 'in ...'
+      what = isIn ? query.split(" ")[2] : what;
+      if (what) stage = stage.filter(v => v.includes(what));
+      // if there is a valid number, we will use that
+      if (!isOn) {
+        suggestions = suggestions.concat(
+          stage.map(string => {
+            const showText = number === 1 || !number;
+            const val = showText ? (string === "hours" ? "an" : "a") : number;
+            const unit = showText
+              ? string.substring(0, string.length - 1)
+              : string;
+            return "in " + val + " " + unit;
+          })
+        );
+      }
     }
   }
   return [suggestions, selectedLocale]; // hack to prevent eslint from complaining
 }
 
-parseDate({query:"next"})
+parseDate({ query: "next" });
