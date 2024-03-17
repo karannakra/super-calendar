@@ -30,8 +30,12 @@ type ParsedDateProps = {
 
 export function parseDate({
   query: query0 = "",
-  ref,
-  options,
+  ref, // reference date for chrono to improve parsing to the right date
+  fallback = [], // default suggestion list, when no query (will be parsed by chrono)
+  hour = 0, // default hour to apply to parsed / suggested dates
+  minute = 0, // default minute to apply to parsed / suggested dates
+  second = 10, // default second to apply to parsed / suggested dates
+  options = { forwardDate: true }, // options for chrono, e.g. { forwardDate: true } to optimize for dates in the future (see docs)
 }: ParsedDateProps) {
   let query = query0;
   let selectedLocale = "en";
@@ -69,6 +73,7 @@ export function parseDate({
     results = savedResults;
   }
 
+  const now = dayjs().set({ second: 0 });
   const shortcut = query.split(" ")[0];
 
   const findSubstrings = (predString: string) =>
@@ -153,7 +158,59 @@ export function parseDate({
       }
     }
   }
+  // fallback value, to show when no query
+  else {
+    suggestions = fallback;
+  }
+  // if there is a result with a known time, use that else use default;
+  let time = { hour, minute, second };
+  if (results.length) {
+    const hour = results[0].start.get("hour");
+    const minute = results[0].start.get("minute");
+    if (hour) time = { hour, minute, second };
+  }
+
+  // builds the suggestion object
+  suggestions = suggestions
+    .filter(v => !!v)
+    .map(label => {
+      const dates =
+        selectedLocale === "en"
+          ? chrono.parse(label, ref, options)
+          : chrono.ru.parse(label, ref, options);
+      // if the result has a known time, use that else use default
+
+      const getTime = (time: string) =>
+        dates[0]?.start.get.call(dates[0]?.start, time);
+
+      const hour = getTime("hour");
+      const minute = getTime("minute");
+      const second = getTime("second");
+
+      // this is a hack to handle that chrono has a different understanding of what 'this' and 'next' means that I do
+      // Chrono works by week number, where on tuesday in W23 'this monday' means Mon in W23 not Mon in W24
+      // and where on tuesday in W23 'next monday' means Mon in W24 not Mon in W25
+      const parsedLabel =
+        label +
+        ` ${hour || time.hour}:${minute || time.minute || 0}:${time.second || second || 0}`;
+      let date = dayjs(
+        selectedLocale === "en"
+          ? chrono.parseDate(parsedLabel, ref, options)
+          : chrono.ru.parseDate(parsedLabel, ref, options)
+      );
+      if (date.isBefore(now) && ["this", "on"].includes(label.split(" ")[0])) {
+        date = date.add(1, "week");
+      }
+      if (
+        date.isBefore(now.clone().add(1, "week")) &&
+        label.split(" ")[0]?.trim() === "next"
+      ) {
+        date = date.add(1, "week");
+      }
+      return { label, date: date.toDate() };
+    });
+
   return [suggestions, selectedLocale]; // hack to prevent eslint from complaining
 }
 
-parseDate({ query: "next" });
+parseDate({ query: "" });
