@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import objectSupport from "dayjs/plugin/objectSupport";
 import {
   fixedDate,
+  dayJsUnits,
   inUnits,
   nextUnits,
   shortcutRegex,
@@ -33,6 +34,7 @@ export function parseDate({
   ref, // reference date for chrono to improve parsing to the right date
   fallback = [], // default suggestion list, when no query (will be parsed by chrono)
   hour = 0, // default hour to apply to parsed / suggested dates
+  parseTime = true, // wether to parseTime, default is false
   minute = 0, // default minute to apply to parsed / suggested dates
   second = 10, // default second to apply to parsed / suggested dates
   options = { forwardDate: true }, // options for chrono, e.g. { forwardDate: true } to optimize for dates in the future (see docs)
@@ -51,7 +53,11 @@ export function parseDate({
     query = query.replace(shortcutRegex, "$1 $2"); // capture query string like "2pm" and replace it with "2 pm"
   }
 
-  let results = chrono.parse.apply(chrono, parsingOptions);
+  let results = chrono.parse.apply(
+    chrono,
+    parsingOptions
+  ) as chrono.en.ParsedResult[];
+  let additonalResults: dayjs.Dayjs[] = [];
 
   if (!results.length) {
     results = chrono.ru.parse.apply(chrono, parsingOptions);
@@ -210,7 +216,102 @@ export function parseDate({
       return { label, date: date.toDate() };
     });
 
-  return [suggestions, selectedLocale]; // hack to prevent eslint from complaining
+  const actual = results
+    // see filter under suggestions...
+    .filter(
+      r =>
+        !["this", "on"].includes(r.text.split(" ")[0]) &&
+        !(r.text.includes("mon") && r.start.get("weekday") === 1)
+    )
+    .map(r => {
+      const dayjsDateObject: { [c in chrono.Component]?: number } =
+        dayJsUnits.reduce((prevValue, unit) => {
+          let value = r.start.get(unit);
+          if (unit === "month" && value) {
+            value -= 1; // dayjs month is 0 indexed ex. 0 is jan
+          }
+          return { ...prevValue, [unit === "day" ? "date" : unit]: value };
+        }, {});
+      return dayjs().set(dayjsDateObject);
+    });
+  // if only a single result, we will try creating more based on the known values from our chrono result
+
+  if (
+    actual.length === 1 &&
+    !isThis &&
+    !isNext &&
+    !isIn &&
+    !isOn &&
+    !isNumber
+  ) {
+    const dayjsDateObject = dayJsUnits.reduce((prevValue, unit) => {
+      let value = results[0].start.get(unit);
+      if (unit === "month" && value) {
+        value -= 1; // dayjs month is 0 indexed ex. 0 is jan
+      }
+      return { ...prevValue, [unit === "day" ? "date" : unit]: value };
+    }, {});
+    const knownValues = Object.keys(dayjsDateObject);
+    const hasWeekday = knownValues.includes("weekday");
+    const hasMonth = knownValues.includes("month");
+    const hasDay = false;
+    const hasYear = knownValues.includes("year");
+    const hasTime = knownValues.includes("hour");
+    if (!(hasYear && hasMonth && hasDay)) {
+      if (hasTime || !parseTime) additonalResults = [];
+      else {
+        // chosen interval based on what we know from chrono
+        const interval = hasTime
+          ? "hour"
+          : hasWeekday
+            ? "week"
+            : hasMonth && hasDay
+              ? parseTime
+                ? "hour"
+                : "year"
+              : "day";
+        // creates two additional results adding 1 and 2 units to the chosen interval
+        additonalResults = [1, 2].map(i => {
+          return actual[0].clone().add(i, interval);
+        });
+      }
+    }
+  }
+
+  const updatedResult = actual.concat(additonalResults).map(date => {
+    const isThisYear = now.isSame(date, "year") && now.isBefore(date);
+    const isPastTime = dayjs(date.toDate()).isBefore(dayjs(), "minute");
+    const differenceInHours = dayjs(date.toDate()).diff(dayjs(), "hour");
+    const isFutureDateRequired = isPastTime && differenceInHours >= -23;
+    // Here -23 is taken because we need to check if the difference of past time is not more then 1 day
+    // then add a day in current date and suggest the time
+    const dateAfterADay = date.add(1, "day");
+    const selectedDate = isFutureDateRequired ? dateAfterADay : date;
+    return {
+      label:
+        "on " + selectedDate.format("MMMM D" + (!isThisYear ? " YYYY" : "")),
+      date: selectedDate.toDate(),
+    };
+  });
+  // merges the suggestions with the results, to make sure no date is shown twice
+  // prioritise the suggestions, because it has better labelling
+  suggestions = suggestions
+    .concat(updatedResult)
+    .filter((dateItem, index, currentArray) => {
+      const indexOfDate = currentArray.findIndex(date =>
+        dayjs(date.date).isSame(dateItem.date, "minute")
+      );
+      return (
+        dayjs(dateItem.date).isValid() &&
+        indexOfDate === index &&
+        dayjs(dateItem.date).isAfter(dayjs())
+      );
+    })
+    .sort((a, b) =>
+      dayjs(a.date).isBefore(b.date) ? -1 : dayjs(a.date).isSame(b.date) ? 0 : 1
+    )
+    .slice(0, 3);
+  return suggestions;
 }
 
 parseDate({ query: "" });
