@@ -32,7 +32,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karannakra/super-calendar"
+    "url": "git+https://github.com/karannakra/super-calendar.git"
   },
   "engines": {
     "node": ">=18"
