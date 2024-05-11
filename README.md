@@ -1,4 +1,8 @@
 <p align="center"><img src="assets/logo.jpg"></p>
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/karannakra/super-calendar/check.yml">
+  <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+</p>
 
 # Super-calendar
 
@@ -6,7 +10,7 @@ Super-calendar is a powerful and versatile JavaScript library for converting hum
 
 ## Installation
 
-You can install Super-calendar via npm:
+You can install Super-calendar via npm, yarn, pnpm:
 
 ### npm
 
@@ -21,9 +25,91 @@ npm install super-calendar
 yarn add super-calendar
 ```
 
-## Requirements
+### pnpm
 
-One of the following versions of [Node.js](https://nodejs.org/en/download/) must be installed to run `npm`:
+```bash
+pnpm install super-calendar
+```
+
+### Usage
+
+```js
+import { parseDate } from "super-calendar";
+
+const dateSuggestions = parseDate({ query: "monday" });
+```
+
+### Options
+
+```js
+/**
+ * Takes a string of fallback dates, if parser is not able
+ * to parse the string input these predefined string values will
+ * generate dates and return in suggestions array
+ * */
+fallback?: string[];
+
+/**
+ * Whether to parseTime, default is true
+ * */
+parseTime?: boolean;
+
+/**
+ * Default hour to apply to parsed / suggested dates
+ * */
+hour?: number | null;
+
+
+/**
+ * Default minute to apply to parsed / suggested dates
+ * */
+minute?: number | null;
+
+/**
+ * Default second to apply to parsed / suggested dates
+ * */
+second?: number | null;
+
+/**
+ * Options like timezone or forwardDate for chrono node
+ * */
+options: chrono.ParsingOption | undefined[]
+
+/**
+ *  Reference date for chrono to improve parsing to the right date
+ * */
+ref?: Date | undefined;
+
+```
+
+## Detailed Usage Example
+
+Here's a more detailed usage example demonstrating different inputs:
+
+1. Run in root folder
+
+```bash
+pnpm pack
+# or
+yarn pack
+# or
+npm pack
+
+```
+
+2. Install the package in example folder and run the developement server.
+
+```bash
+pnpm install
+pnpm run dev
+# or
+yarn install
+yarn run dev
+# or
+npm install
+npm run dev
+
+```
 
 ## Contributing
 

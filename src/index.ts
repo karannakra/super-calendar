@@ -34,7 +34,7 @@ export function parseDate({
   ref, // reference date for chrono to improve parsing to the right date
   fallback = [], // default suggestion list, when no query (will be parsed by chrono)
   hour = 0, // default hour to apply to parsed / suggested dates
-  parseTime = true, // wether to parseTime, default is false
+  parseTime = true, // wether to parseTime, default is true
   minute = 0, // default minute to apply to parsed / suggested dates
   second = 10, // default second to apply to parsed / suggested dates
   options = { forwardDate: true }, // options for chrono, e.g. { forwardDate: true } to optimize for dates in the future (see docs)
