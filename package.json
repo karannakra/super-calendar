@@ -13,6 +13,7 @@
     "fmt": "prettier --write --ignore-unknown --no-error-on-unmatched-pattern --cache ."
   },
   "files": [
+    "dist",
     "package.json",
     "LICENSE.md",
     "README.md"
@@ -20,11 +21,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     "import": {
-      "types": "./dist/index.d.mts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/esm/index.js"
     },
     "require": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/index.cts",
       "default": "./dist/index.js"
     }
   },
